@@ -4,7 +4,7 @@ using namespace KamataEngine;
 
 //GameScene::~GameScene() { delete sprite_; }
 GameScene::~GameScene() { delete model_; }
-
+GameScene::~GameScene() { delete player_; }
 void GameScene::Initialize() {
 	// メンバ変数への代入処理(省略)
 	// ここにインゲームの初期化処理を書く
@@ -22,7 +22,8 @@ void GameScene::Initialize() {
 	// サウンドでーたの読み込み
 	voiceHandle_ = Audio::GetInstance()->PlayWave(soundDataHandle_, true);
 	;
-
+	player_ = new Player();
+	player_->Initialize();
 
 }
 void GameScene::Update() {
@@ -37,6 +38,7 @@ void GameScene::Update() {
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
 		Audio::GetInstance()->StopWave(voiceHandle_);
 	}
+	player_->Update();
 }
 void GameScene::Draw() {
 	//DirectXcommonインスタンスの取得
@@ -52,5 +54,6 @@ void GameScene::Draw() {
 	model_->Draw(worldTransform_, camera_, textureHandle_);
 
 	Model::PostDraw();
-	
+	player_->Draw();
+
 }

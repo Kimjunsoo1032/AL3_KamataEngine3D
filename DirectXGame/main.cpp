@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include "Player.h"
 #include "KamataEngine.h"
 #include <Windows.h>
 
