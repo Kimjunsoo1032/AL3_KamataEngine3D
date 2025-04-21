@@ -1,12 +1,21 @@
 #include "GameScene.h"
-
+#include "MyMath.h"
 using namespace KamataEngine;
 
 // GameScene::~GameScene() { delete sprite_; }
 GameScene::~GameScene() {
 	delete model_;
 	delete player_;
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlock_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			delete worldTransformBlock;
+		}
+	}
+	worldTransformBlocks_.clear();
+
 }
+
+
 void GameScene::Initialize() {
 	// メンバ変数への代入処理(省略)
 	// ここにインゲームの初期化処理を書く
@@ -26,6 +35,27 @@ void GameScene::Initialize() {
 	;
 	player_ = new Player();
 	player_->Initialize(model_, textureHandle_, &camera_);
+	//
+	//
+	const uint32_t kNumBlockVirtical = 10;
+	const uint32_t kNumBlockHorizontal = 20;
+
+	const float kBlockWidth = 2.0f;
+	const float kBlockHeight = 2.0f;
+	worldTransformBlocks_.resize(kNumBlockHorizontal);
+	for (uint32_t i = 0; i < kNumBlockHorizontal; ++i) {
+		for (uint32_t j = 0; j < kNumBlockHorizontal; i++) {
+			worldTransformBlocks_[i][j] = new WorldTransform();
+			worldTransformBlocks_[i][j]->Initialize();
+			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
+			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+		}
+	}
+
+	worldTransformBlocks_.resize(kNumBlockVirtical);
+	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
+		worldTransformBlocks_[i].resize(kNumBlockHorizontal)
+	}
 }
 void GameScene::Update() {
 	// ここにインゲームの更新処理を書く
@@ -40,6 +70,11 @@ void GameScene::Update() {
 		Audio::GetInstance()->StopWave(voiceHandle_);
 	}
 	player_->Update();
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+		// 어핀계수행렬의 작성
+		worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_); // 어핀관수행렬
+		worldTransformBlock->TransferMatrix();
+	}
 }
 void GameScene::Draw() {
 	// DirectXcommonインスタンスの取得
@@ -55,4 +90,7 @@ void GameScene::Draw() {
 	model_->Draw(worldTransform_, camera_, textureHandle_);
 	player_->Draw();
 	Model::PostDraw();
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+		modelBlock_->Draw(*worldTransformBlock, camera_);
+	}
 }
