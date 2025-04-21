@@ -2,9 +2,11 @@
 
 using namespace KamataEngine;
 
-//GameScene::~GameScene() { delete sprite_; }
-GameScene::~GameScene() { delete model_; }
-GameScene::~GameScene() { delete player_; }
+// GameScene::~GameScene() { delete sprite_; }
+GameScene::~GameScene() {
+	delete model_;
+	delete player_;
+}
 void GameScene::Initialize() {
 	// メンバ変数への代入処理(省略)
 	// ここにインゲームの初期化処理を書く
@@ -15,25 +17,24 @@ void GameScene::Initialize() {
 	worldTransform_.Initialize();
 	camera_.Initialize();
 
-	//サウンドでーたの読み込み
+	// サウンドでーたの読み込み
 	soundDataHandle_ = Audio::GetInstance()->LoadWave("fanfare.wav");
-	//音楽再生
+	// 音楽再生
 	Audio::GetInstance()->PlayWave(soundDataHandle_);
 	// サウンドでーたの読み込み
 	voiceHandle_ = Audio::GetInstance()->PlayWave(soundDataHandle_, true);
 	;
 	player_ = new Player();
-	player_->Initialize();
-
+	player_->Initialize(model_, textureHandle_, &camera_);
 }
 void GameScene::Update() {
 	// ここにインゲームの更新処理を書く
 	Vector2 position = sprite_->GetPosition();
-	
+
 	position.x += 2.0f;
 	position.y += 1.0f;
 
-	//移動した座標をスプライトに反映
+	// 移動した座標をスプライトに反映
 	sprite_->SetPosition(position);
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
 		Audio::GetInstance()->StopWave(voiceHandle_);
@@ -41,19 +42,17 @@ void GameScene::Update() {
 	player_->Update();
 }
 void GameScene::Draw() {
-	//DirectXcommonインスタンスの取得
+	// DirectXcommonインスタンスの取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 	////スプライト描画前処理
-	//Sprite::PreDraw(dxCommon->GetCommandList());
-	//sprite_->Draw();
+	// Sprite::PreDraw(dxCommon->GetCommandList());
+	// sprite_->Draw();
 	////スプライト描画後処理
-	//Sprite::PostDraw();
+	// Sprite::PostDraw();
 
 	Model::PreDraw(dxCommon->GetCommandList());
-	//ここに3Dモデルインスタンスの描画処理を記述する
+	// ここに3Dモデルインスタンスの描画処理を記述する
 	model_->Draw(worldTransform_, camera_, textureHandle_);
-
-	Model::PostDraw();
 	player_->Draw();
-
+	Model::PostDraw();
 }
