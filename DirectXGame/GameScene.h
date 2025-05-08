@@ -9,7 +9,7 @@ class GameScene {
 	KamataEngine::Sprite* sprite_ = nullptr;
 
 	KamataEngine::Model* model_ = nullptr;
-	
+	KamataEngine::Model* modelBlock_ = nullptr;
 	KamataEngine::WorldTransform worldTransform_;
 	KamataEngine::Camera camera_;
 
@@ -19,7 +19,10 @@ class GameScene {
 	uint32_t voiceHandle_ = 0;
 	Player* player_ = nullptr;
 	//std::vector<WorldTransform*> worldTransformBlocks_;
-	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+	std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
+	bool isDebugCameraActive_ = false;
+	KamataEngine::DebugCamera* debugCamera_ = nullptr;
+
 
 public:
 	~GameScene();
