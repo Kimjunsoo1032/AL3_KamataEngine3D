@@ -18,6 +18,7 @@ GameScene::~GameScene() {
 		}
 	}
 	worldTransformBlocks_.clear();
+	delete modelSkydome_;
 }
 
 void GameScene::Initialize() {
@@ -62,7 +63,12 @@ void GameScene::Initialize() {
 		}
 	}
 	debugCamera_ = new DebugCamera(1280, 720);
+
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	skydome_ = new Skydome();
+    skydome_->Initialize(modelSkydome_, textureHandle_, &camera_);
 }
+    
 void GameScene::Update() {
 	// ここにインゲームの更新処理を書く
 	Vector2 position = sprite_->GetPosition();
@@ -85,7 +91,6 @@ void GameScene::Update() {
 			worldTransformBlock->TransferMatrix();
 		}
 	}
-
 	debugCamera_->Update();
 
 #ifdef _DEBUG
@@ -110,7 +115,7 @@ void GameScene::Draw() {
 	// ここに3Dモデルインスタンスの描画処理を記述する
 	model_->Draw(worldTransform_, camera_, textureHandle_);
 	player_->Draw();
-	
+	skydome_->Draw();
 	for (std::vector<WorldTransform*> worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
