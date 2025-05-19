@@ -12,6 +12,4 @@ void Skydome::Update() {
 	// ここにインゲームの更新処理を書く
 	worldTransform_.TransferMatrix();
 }
-void Skydome::Draw() {
-	model_->Draw(worldTransform_, *camera_);
-};
+void Skydome::Draw() { model_->Draw(worldTransform_, *camera_); };

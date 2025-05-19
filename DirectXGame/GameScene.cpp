@@ -66,9 +66,9 @@ void GameScene::Initialize() {
 
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	skydome_ = new Skydome();
-    skydome_->Initialize(modelSkydome_, textureHandle_, &camera_);
+	skydome_->Initialize(modelSkydome_, textureHandle_, &camera_);
 }
-    
+
 void GameScene::Update() {
 	// ここにインゲームの更新処理を書く
 	Vector2 position = sprite_->GetPosition();
